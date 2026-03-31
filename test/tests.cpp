@@ -129,8 +129,7 @@ TEST(DoorTimerAdapter, timeout_when_closed) {
 
   try {
     door.unlock();
-  } catch (const std::runtime_error &) {
-  }
+  } catch (const std::runtime_error &) {}
 
   door.lock();
 
