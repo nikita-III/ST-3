@@ -14,12 +14,12 @@
 
 class MockTimerClient : public TimerClient {
  public:
-  MOCK_METHOD(void, Timeout, (), (override)); //
+  MOCK_METHOD(void, Timeout, (), (override));
 };
 
 class TimedDoorFixture : public ::testing::Test {
  protected:
-  std::unique_ptr<TimedDoor> door;
+  std::unique_ptr<TimedDoor> door; // для простоты
 
   void SetUp() override {
     door = std::make_unique<TimedDoor>(10);
