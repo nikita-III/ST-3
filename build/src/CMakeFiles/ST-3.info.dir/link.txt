@@ -1,1 +1,0 @@
-/usr/bin/c++ -O3 -DNDEBUG "CMakeFiles/ST-3.info.dir/main.cpp.o" -o ST-3.info  -Wl,-rpath,/home/ntimofeev/this-guy-this-guy-st/ST-3/build/src: libST-3.so -lpthread 
