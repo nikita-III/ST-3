@@ -14,7 +14,7 @@
 
 class MockTimerClient : public TimerClient {
  public:
-  MOCK_METHOD(void, Timeout, (), (override));
+  MOCK_METHOD(void, Timeout, (), (override)); //
 };
 
 class TimedDoorFixture : public ::testing::Test {
