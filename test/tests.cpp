@@ -15,7 +15,8 @@ class MockTimerClient : public TimerClient {
 
 class MockTimer : public Timer {
  public:
-    MOCK_METHOD(void, tregister, (int timeout, TimerClient* client), (override));
+    MOCK_METHOD(void, tregister,
+               (int timeout, TimerClient* client), (override));
 };
 
 TEST(TimedDoorTest, ConstructorSetsTimeoutAndDoorClosed) {
