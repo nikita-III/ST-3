@@ -1,20 +1,20 @@
 // Copyright 2021 GHA Test Team
 
-#include <thread>
 #include <gtest/gtest.h>
 #include <gmock/gmock.h>
+#include <thread>
 #include "TimedDoor.h"
 
 using ::testing::_;
 using ::testing::Return;
 
 class MockTimerClient : public TimerClient {
-public:
+ public:
     MOCK_METHOD(void, Timeout, (), (override));
 };
 
 class MockTimer : public Timer {
-public:
+ public:
     MOCK_METHOD(void, tregister, (int timeout, TimerClient* client), (override));
 };
 
