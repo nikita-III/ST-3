@@ -1,49 +1,52 @@
 // Copyright 2021 GHA Test Team
+#include <thread>
+#include <stdexcept>
+#include <chrono>
 #include "TimedDoor.h"
 
-#include <chrono>
-#include <stdexcept>
-#include <thread>
-
-DoorTimerAdapter::DoorTimerAdapter(TimedDoor &door) : door(door) {}
+DoorTimerAdapter::DoorTimerAdapter(TimedDoor& d) : door(d) {}
 
 void DoorTimerAdapter::Timeout() {
-  Timer timer;
-  timer.tregister(door.getTimeOut(), nullptr);
-  door.throwState();
+    door.throwState();
 }
 
-TimedDoor::TimedDoor(int timeout)
-    : adapter(new DoorTimerAdapter(*this)), iTimeout(timeout), isOpened(false) {
+TimedDoor::TimedDoor(int timeout) : iTimeout(timeout), isOpened(false) {
+    adapter = new DoorTimerAdapter(*this);
 }
 
-bool TimedDoor::isDoorOpened() { return isOpened; }
+TimedDoor::~TimedDoor() {
+    delete adapter;
+}
+
+bool TimedDoor::isDoorOpened() {
+    return isOpened;
+}
 
 void TimedDoor::unlock() {
-  isOpened = true;
-  adapter->Timeout();
+    isOpened = true;
 }
 
-void TimedDoor::lock() { isOpened = false; }
+void TimedDoor::lock() {
+    isOpened = false;
+}
 
-int TimedDoor::getTimeOut() const { return iTimeout; }
+int TimedDoor::getTimeOut() const {
+    return iTimeout;
+}
 
 void TimedDoor::throwState() {
-  if (isOpened) {
-    throw std::runtime_error("дверь все еще открыта");
-  }
+    if (isOpened) {
+        throw DoorTimeoutException();
+    }
 }
 
-void Timer::sleep(int timeout) {
-  if (timeout > 0) {
-    std::this_thread::sleep_for(std::chrono::milliseconds(timeout));
-  }
+DoorTimerAdapter* TimedDoor::getAdapter() const {
+    return adapter;
 }
 
-void Timer::tregister(int timeout, TimerClient *cli) {
-  client = cli;
-  sleep(timeout);
-  if (client != nullptr) {
-    client->Timeout();
-  }
+void Timer::tregister(int timeout, TimerClient* client) {
+    std::thread([timeout, client]() {
+        std::this_thread::sleep_for(std::chrono::milliseconds(timeout));
+        client->Timeout();
+    }).detach();
 }
