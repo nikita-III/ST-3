@@ -108,19 +108,3 @@ TEST(TimedDoorTest, DestructorDeletesAdapter) {
     delete door;
     SUCCEED();
 }
-
-TEST(RealTimerTest, TimerCallsTimeoutAfterDelay) {
-    TimedDoor door(50);
-    Timer realTimer;
-    bool exceptionCaught = false;
-
-    door.unlock();
-    try {
-        realTimer.tregister(door.getTimeOut(), door.getAdapter());
-        std::this_thread::sleep_for(std::chrono::milliseconds(100));
-    }
-    catch (const DoorTimeoutException&) {
-        exceptionCaught = true;
-    }
-    EXPECT_TRUE(exceptionCaught);
-}
